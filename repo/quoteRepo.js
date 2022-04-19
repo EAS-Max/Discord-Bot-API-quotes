@@ -12,6 +12,17 @@ let quoteRepo = {
             }
         });
     },
+    getById: function (id, resolve, reject) {
+        fs.readFile(QUOTES_FILE, function (err, data) {
+            if (err) {
+                reject(err);
+            }
+            else {
+                let pie = JSON.parse(data).find(p => p.id == id);
+                resolve(pie);
+            }
+        });
+    }
 };
 
 module.exports = quoteRepo;
