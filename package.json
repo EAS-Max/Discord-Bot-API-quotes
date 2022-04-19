@@ -1,0 +1,19 @@
+{
+  "name": "discord-bot-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EAS-Max/Discord-Bot-API.git"
+  },
+  "author": "Max Barron",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EAS-Max/Discord-Bot-API/issues"
+  },
+  "homepage": "https://github.com/EAS-Max/Discord-Bot-API#readme"
+}
