@@ -24,6 +24,7 @@ router.get('/:id', function (req, res, next) {
         if (data) {
             res.status(200).json({
                 "status": 200,
+                "statusText": "ok",
                 "message": "Single quote retrieved.",
                 "data": data
             });
@@ -31,6 +32,7 @@ router.get('/:id', function (req, res, next) {
         else {
             res.status(404).json({
                 "status": 404,
+                "statusText": "Not Found",
                 "message": "The quote '" + req.params.id + "' could not be found.",
                 "error": {
                     "code": "NOT_FOUND",
@@ -57,12 +59,29 @@ var connection = mysql.createConnection({
 
 connection.connect();
 
-connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
-    if (error) throw error;
-    console.log('The solution is: ', results[0].solution);
+
+//Get all quotes from database
+connection.query("SELECT * FROM `quotes`", function (err, result, fields) {
+    if (err) throw err;
+    console.log(result);
 });
 
-connection.query("SELECT * FROM `quotes`", function (err, result, fields) {
+// Get random quote
+function randomIntFromInterval(min, max) { // min and max included 
+    return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+const rndInt = randomIntFromInterval(1, 6)
+// console.log(rndInt)
+
+connection.query(`SELECT * FROM quotes WHERE id= ${rndInt}`, function (err, result, fields) {
+    if (err) throw err;
+    console.log(result);
+});
+
+// Get by id from database 
+const id = '2'
+connection.query(`SELECT * FROM quotes WHERE id= ${id}`, function (err, result, fields) {
     if (err) throw err;
     console.log(result);
 });
