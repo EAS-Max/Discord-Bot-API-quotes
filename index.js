@@ -71,7 +71,7 @@ function randomIntFromInterval(min, max) { // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
-const rndInt = randomIntFromInterval(1, 6)
+const rndInt = randomIntFromInterval(1, 24)
 // console.log(rndInt)
 
 connection.query(`SELECT * FROM quotes WHERE id= ${rndInt}`, function (err, result, fields) {
