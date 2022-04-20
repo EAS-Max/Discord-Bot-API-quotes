@@ -1,16 +1,17 @@
-DROP TABLE IF EXISTS usertype;
-CREATE TABLE usertype (
+DROP TABLE IF EXISTS quotes;
+CREATE TABLE quotes (
   id         INT AUTO_INCREMENT NOT NULL,
   quote      VARCHAR(300) NOT NULL,
   person      VARCHAR(128) NOT NULL,
   PRIMARY KEY (`id`)
 );
 
-INSERT INTO users 
-  (username, command) 
+INSERT INTO quotes 
+  (quote,
+  person) 
 VALUES
-  ('Example action 1', '!dosomething'),
-  ('Example action 1', '!dosomethingelse');
+  ('The greatest glory in living lies not in never falling, but in rising every time we fall.', 'Nelson Mandela'),
+  ('The way to get started is to quit talking and begin doing.', 'Walt Disney');
 
 DROP TABLE IF EXISTS actions;
 CREATE TABLE actions (
