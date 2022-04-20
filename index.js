@@ -18,6 +18,31 @@ router.get('/', function (req, res, next) {
         next(err);
     });
 });
+router.get('/random', function (req, res, next) {
+    quoteRepo.getRandom(function (data) {
+        if (data) {
+            res.status(200).json({
+                "status": 200,
+                "statusText": "ok",
+                "message": "Random quote retrieved",
+                "data": data
+            });
+        }
+        else {
+            res.status(404).json({
+                "status": 404,
+                "statusText": "Not Found",
+                "message": "The quote '" + req.params.id + "' could not be found.",
+                "error": {
+                    "code": "NOT_FOUND",
+                    "message": "The quote '" + req.params.id + "' could not be found."
+                }
+            });
+        }
+    }, function (err) {
+        next(err);
+    });
+});
 
 router.get('/:id', function (req, res, next) {
     quoteRepo.getById(req.params.id, function (data) {
@@ -45,31 +70,6 @@ router.get('/:id', function (req, res, next) {
     });
 });
 
-router.get('/:200', function (req, res, next) {
-    quoteRepo.getRandom(function (data) {
-        if (data) {
-            res.status(200).json({
-                "status": 200,
-                "statusText": "ok",
-                "message": "Random quote retrieved",
-                "data": data
-            });
-        }
-        else {
-            res.status(404).json({
-                "status": 404,
-                "statusText": "Not Found",
-                "message": "The quote '" + req.params.id + "' could not be found.",
-                "error": {
-                    "code": "NOT_FOUND",
-                    "message": "The quote '" + req.params.id + "' could not be found."
-                }
-            });
-        }
-    }, function (err) {
-        next(err);
-    });
-});
 
 
 app.use('/api/', router);

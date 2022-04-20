@@ -10,10 +10,10 @@ var connection = mysql.createConnection({
 
 connection.connect();
 
-function randomIntFromInterval(min, max) { // min and max included 
-    return Math.floor(Math.random() * (max - min + 1) + min)
-}
-const rndInt2 = randomIntFromInterval(1, 24)
+// function randomIntFromInterval(min, max) { // min and max included 
+//     return Math.floor(Math.random() * (max - min + 1) + min)
+// }
+// const rndInt2 = randomIntFromInterval(1, 24)
 
 let quoteRepo = {
     get: function (resolve, reject) {
@@ -36,8 +36,11 @@ let quoteRepo = {
 
         });
     },
-    getRandom: function (random, resolve, reject) {
-        connection.query(`SELECT * FROM quotes WHERE id= ${rndInt2}`, function (err, result, fields) {
+    getRandom: function (resolve, reject) {
+
+        const randomID = rndInt2(1, 24)
+
+        connection.query(`SELECT * FROM quotes WHERE id= ${randomID}`, function (err, result, fields) {
             if (err) {
                 reject(err)
             } else {
@@ -45,11 +48,15 @@ let quoteRepo = {
             }
         });
     },
-    rndInt2: function (min, max) { // min and max included 
-        return Math.floor(Math.random() * (max - min + 1) + min)
-    }
+
 
 };
+
+function rndInt2(min, max) { // min and max included 
+    return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+
 
 module.exports = quoteRepo;
 
