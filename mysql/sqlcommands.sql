@@ -33,7 +33,8 @@ VALUES
   ("The point is, is it one or two", 'Rhys Morgan'),
   ("If you write working code then you don't need to test it", 'Andrew Williams'),
   ("Someone move in with me dammit!", 'Kaine Bent'),
-  ("6 hours of debugging can save you 5 minutes of reading documentation", 'Unknown')
+  ("6 hours of debugging can save you 5 minutes of reading documentation", 'Unknown'),
+  ("Wow, does that come in man size?", 'Rhys Morgan')
 
 
 

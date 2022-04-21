@@ -4,8 +4,23 @@ const res = require("express/lib/response");
 let router = express.Router();
 const app = express();
 app.use(express.json());
-const nodemon = require("nodemon");
-const mysql = require("mysql")
+const mysql = require("mysql");
+const function_module = require('./validate/functionsValidate.js');
+
+app.use(express.static('public'));
+app.use(express.text());
+
+router.get('/validate/quote,listAll', function (req, res, next) {
+    quoteRepo.get(function (data) {
+        res.status(200).json({
+            "status": 200,
+            "message": "All quotes retrieved.",
+            "data": data
+        });
+    }, function (err) {
+        next(err);
+    });
+});
 
 router.get('/', function (req, res, next) {
     quoteRepo.get(function (data) {
@@ -86,6 +101,7 @@ var connection = mysql.createConnection({
 
 connection.connect();
 
+//Command 
 
 //Get all quotes from database
 connection.query("SELECT * FROM `quotes`", function (err, result, fields) {

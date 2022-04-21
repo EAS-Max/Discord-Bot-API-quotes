@@ -21,6 +21,8 @@
     "express": "^4.17.3",
     "fs": "^0.0.1-security",
     "mysql": "^2.18.1",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "promise": "^8.1.0",
+    "validator": "^13.7.0"
   }
 }
