@@ -10,7 +10,6 @@ app.use(express.static('public'));
 app.use(express.text());
 
 
-app.use('/api/', router);
 
 
 
