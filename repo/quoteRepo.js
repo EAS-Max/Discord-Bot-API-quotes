@@ -42,12 +42,24 @@ exports.func = req => {
                         reject(err)
                     }
                     resolve(result);
-                })
+                });
+            case "random":
+                const randomID = rndInt2(1, 30)
+                connection.query(`SELECT * FROM quotes WHERE id= ${randomID}`, function (err, result, fields) {
+                    if (err) {
+                        reject(err)
+                    } else {
+                        resolve(result);
+                    }
+                });
         }
     })
 }
 
 
+function rndInt2(min, max) { // min and max included 
+    return Math.floor(Math.random() * (max - min + 1) + min)
+}
 // let quoteRepo = {
 //     get: function (resolve, reject) {
 //         return new Promise((resolve, reject) => {
@@ -87,9 +99,6 @@ exports.func = req => {
 
 // };
 
-// function rndInt2(min, max) { // min and max included 
-//     return Math.floor(Math.random() * (max - min + 1) + min)
-// }
 
 
 
