@@ -49,7 +49,7 @@ exports.func = req => {
                     if (err) {
                         reject(err)
                     } else {
-                        resolve(result);
+                        resolve({ "status": "success", "status message": "sending quote", "discord_message": result[0].quote });
                     }
                 });
         }

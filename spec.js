@@ -27,9 +27,9 @@ module.exports = Object.freeze({
       arg_count: 1,
       args: [
         {
-          name: "name",
+          name: "number",
           type: "string",
-          min: 3,
+          min: 1,
           max: 15,
           pattern: "alphanumeric"
         }
