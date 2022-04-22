@@ -15,16 +15,17 @@
  *         description: Returns JSON document with validation results
  */
 
-var function_module = require('../repo/functionsValidate.js')
-module.exports = function (app) {
-    app.get('/api/validate/:command', (req, res, next) => {
-
-        var getResponse = function_module.func(req)
-        getResponse.then((response) => {
-            res.send(response)
-        }).catch(err => {
-            res.send(err)
-        })
-
-    })
-}
+ var QuoteRepo = require('../repo/quoteRepo.js')
+ module.exports = function (app) {
+     app.get('/api/command/:command', (req, res, next) => {
+ 
+         var getResponse = QuoteRepo.func(req)
+         getResponse.then((response) => {
+             res.send(response)
+         }).catch(err => {
+             res.send(err)
+         })
+ 
+     })
+ }
+ 
