@@ -6,6 +6,10 @@ const app = express();
 app.use(express.json());
 const mysql = require("mysql");
 const function_module = require('./validate/functionsValidate.js');
+const Promise = require('promise');
+const fs = require('fs');
+const path = require("path");
+
 
 app.use(express.static('public'));
 app.use(express.text());
@@ -127,4 +131,12 @@ const id = '2'
 connection.query(`SELECT * FROM quotes WHERE id= ${id}`, function (err, result, fields) {
     if (err) throw err;
     console.log(result);
+});
+
+// Add all routes
+fs.readdirSync(path.join(__dirname, "validate")).forEach(function (file) {
+    if (file[0] === ".") {
+        return;
+    }
+    require(path.join(__dirname, "validate", file))(app);
 });

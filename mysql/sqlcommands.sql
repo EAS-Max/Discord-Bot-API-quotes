@@ -34,7 +34,12 @@ VALUES
   ("If you write working code then you don't need to test it", 'Andrew Williams'),
   ("Someone move in with me dammit!", 'Kaine Bent'),
   ("6 hours of debugging can save you 5 minutes of reading documentation", 'Unknown'),
-  ("Wow, does that come in man size?", 'Rhys Morgan')
+  ("Wow, does that come in man size?", 'Rhys Morgan'),
+  ("Do not go where the path may lead, go instead where there is no path and leave a trail.", 'Ralph Waldo Emerson'),
+  ("You have brains in your head. You have feet in your shoes. You can steer yourself any direction you choose.", 'Dr. Seuss'),
+  ("Life is either a daring adventure or nothing at all.", 'Helen Keller'),
+  ("In the end, it's not the years in your life that count. It's the life in your years.", 'Abraham Lincoln'),
+  ("Life is never fair, and perhaps it is a good thing for most of us that it is not.", 'Oscar Wilde')
 
 
 
