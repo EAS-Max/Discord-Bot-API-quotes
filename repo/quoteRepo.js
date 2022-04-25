@@ -24,24 +24,24 @@ exports.func = req => {
     return new Promise((resolve, reject) => {
         let params = req.params.command.split(",");
 
-        switch (params[0]) {
+        switch (params[1]) {
             case "get":
                 connection.query("SELECT * FROM `quotes`", function (err, result, fields) {
                     if (err) {
                         reject(err);
                     }
                     else {
-                        resolve({ "status": "success", "status message": "sending quote", "discord_message": result[0].quote });
+                        resolve({ "status": "success", "status message": "sending quote", "discord_message": result[0].quote + " - " + result[0].person });
                     }
                 });
                 break;
             case "getById":
                 const query = `SELECT * FROM quotes WHERE id=?`;
-                connection.query(query, params[1], function (err, result, fields) {
+                connection.query(query, params[2], function (err, result, fields) {
                     if (err) {
                         reject(err)
                     }
-                    resolve(result);
+                    resolve({ "status": "success", "status message": "sending quote", "discord_message": result[0].quote + " - " + result[0].person });
                 });
             case "random":
                 const randomID = rndInt2(1, 30)
@@ -49,10 +49,29 @@ exports.func = req => {
                     if (err) {
                         reject(err)
                     } else {
-                        resolve({ "status": "success", "status message": "sending quote", "discord_message": result[0].quote });
+                        resolve({ "status": "success", "status message": "sending quote", "discord_message": result[0].quote + " - " + result[0].person });
                     }
                 });
+                break;
+            case "add":
+                const query1 = `INSERT INTO quotes 
+                (quote, person) 
+                VALUES
+                (?, ?)`;
+
+                connection.query(query1, [params[2], params[3]], function (err, result, fields) {
+                    if (err) {
+                        reject(err)
+                    }
+                    resolve({ "status": "success", "status_message": "sending quote", "discord_message": "added quote" });
+                });
+                break;
+            case "owner":
+                resolve({ "status": "success", "status_message": "Get owner", "discord_message": "The Godfather" });
+                break;
         }
+
+
     })
 }
 

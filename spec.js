@@ -1,17 +1,16 @@
 // Bot API action constants
 module.exports = Object.freeze({
   identifier: "quote",
-  actions: ["create", "get", "getById", "random", "power_on", "power_off"],
+  actions: ["add", "get", "getById", "random", "power_on", "owner"],
   schema: {
-    create: {
-      arg_count: 1,
+    add: {
+      arg_count: 2,
       args: [
         {
-          name: "name",
+          name: "quote",
           type: "string",
-          min: 10,
-          max: 220,
-          pattern: "alphanumeric"
+          min: 5,
+          max: 300
         }
       ]
     },
@@ -47,17 +46,9 @@ module.exports = Object.freeze({
         }
       ]
     },
-    power_off: {
-      arg_count: 1,
-      args: [
-        {
-          name: "name",
-          type: "string",
-          min: 3,
-          max: 15,
-          pattern: "alphanumeric"
-        }
-      ]
+    owner: {
+      arg_count: 0,
+      args: []
     }
   }
 });
