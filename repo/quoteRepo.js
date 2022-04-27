@@ -108,6 +108,23 @@ exports.func = req => {
                     resolve({ "status": "success", "status_message": "quote deleted", "discord_message": "Succesfully deleted quote" });
                 });
                 break;
+                case "actions":
+                    resolve({ "status": "success", "status_message": "Get all actions", "discord_message": `- 
+USAGE: 
+
+!quote <action>
+
+ACTIONS:
+
+add <quote | name>
+
+random, person <name>
+
+ID <id>
+
+delete <quote | name>
+
+owner` });
         }
     })
 };
