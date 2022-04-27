@@ -39,7 +39,8 @@ VALUES
   ("You have brains in your head. You have feet in your shoes. You can steer yourself any direction you choose.", 'Dr. Seuss'),
   ("Life is either a daring adventure or nothing at all.", 'Helen Keller'),
   ("In the end, it's not the years in your life that count. It's the life in your years.", 'Abraham Lincoln'),
-  ("Life is never fair, and perhaps it is a good thing for most of us that it is not.", 'Oscar Wilde')
+  ("Life is never fair, and perhaps it is a good thing for most of us that it is not.", 'Oscar Wilde'),
+  ("If your aunt had balls she would be your uncle but she doesnt so shes not", 'some rando')
 
 
 

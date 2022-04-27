@@ -35,13 +35,17 @@ exports.func = req => {
                     }
                 });
                 break;
-            case "getById":
+            case "ID":
                 const query = `SELECT * FROM quotes WHERE id=?`;
                 connection.query(query, params[2], function (err, result, fields) {
                     if (err) {
                         reject(err)
                     }
+                    try {
                     resolve({ "status": "success", "status message": "sending quote", "discord_message": result[0].quote + " - " + result[0].person });
+                    } catch (error) {
+                        reject({ "status": "failed", "status_message": "can't resolve query", "discord_message": "failed to find quote with the ID of " + params[2] });
+                    }
                 });
             case "random":
                 const randomID = rndInt2(1, 30)
@@ -54,33 +58,66 @@ exports.func = req => {
                 });
                 break;
             case "add":
-                const query1 = `INSERT INTO quotes 
+                const query3 = `INSERT INTO quotes
                 (quote, person) 
-                VALUES
-                (?, ?)`;
-
-                connection.query(query1, [params[2], params[3]], function (err, result, fields) {
+                 VALUES (?, ?)`;
+                params.shift()
+                params.shift()
+                var quote = params.join(" ").split("|")
+                connection.query(query3, [quote[0], quote[1]], function (err, result, fields) {
                     if (err) {
+                        console.log(err)
                         reject(err)
                     }
-                    resolve({ "status": "success", "status_message": "sending quote", "discord_message": "added quote" });
+                    resolve({ "status": "success", "status_message": "quote added", "discord_message": "Succesfully inserted quote" });
                 });
                 break;
             case "owner":
-                resolve({ "status": "success", "status_message": "Get owner", "discord_message": "The Godfather" });
+                    resolve({ "status": "success", "status_message": "Get owner", "discord_message": "https://tenor.com/view/dark-souls-ya-sobaka-ti-sobaka-yasosy-biby-gif-19664947" });
                 break;
+            case "person":
+                const query2 = `SELECT * FROM quotes WHERE person=?`
+                params.shift()
+                params.shift()
+                var person = params.join(" ")
+                connection.query(query2, person, function (err, result, fields) {
+                    if (err) {
+                        reject(err)
+                    }
+                    try {
+                    resolve({ "status": "success", "status message": "sending quote", "discord_message": result[0].quote + " - " + result[0].person });
+                    } catch {
+                        reject({ "status": "failed", "status_message": "can't resolve query", "discord_message": "failed to find quote from " + person });
+                    }
+                });
         }
-
-
     })
-}
-
-
-function rndInt2(min, max) { // min and max included 
-    return Math.floor(Math.random() * (max - min + 1) + min)
-}
-// let quoteRepo = {
-//     get: function (resolve, reject) {
+};
+            
+            // function getRandomInt(min, max) {
+            //     min = Math.ceil(min);
+            //     max = Math.floor(max);
+            //     return Math.floor(Math.random() * (max - min + 1)) + min;
+            // }
+            
+            
+            function rndInt2(min, max) { // min and max included 
+                return Math.floor(Math.random() * (max - min + 1) + min)
+            }
+        
+            // const query1 = `INSERT INTO quotes 
+            // (quote, person) 
+            // VALUES
+            // (?, ?)`;
+        
+            // connection.query(query1, [params[2], params[3]], function (err, result, fields) {
+            //     if (err) {
+            //         reject(err)
+            //     }
+            //     resolve({ "status": "success", "status_message": "sending quote", "discord_message": "added quote" });
+            // });
+            // let quoteRepo = {
+                //     get: function (resolve, reject) {
 //         return new Promise((resolve, reject) => {
 //             connection.query("SELECT * FROM `quotes`", function (err, result, fields) {
 //                 if (err) {
@@ -92,7 +129,7 @@ function rndInt2(min, max) { // min and max included
 //             });
 //         })
 //     },
-//     getById: function (id, resolve, reject) {
+//     ID: function (id, resolve, reject) {
 //         connection.query(`SELECT * FROM quotes WHERE id="${id}"`, function (err, result, fields) {
 //             if (err) {
 //                 reject(err)
@@ -124,7 +161,7 @@ function rndInt2(min, max) { // min and max included
 // module.exports = quoteRepo;
 
 
-    //     getById: function (id, resolve, reject) {
+    //     ID: function (id, resolve, reject) {
     //         fs.readFile(QUOTES_FILE, function (err, data) {
     //             if (err) {
     //                 reject(err);
