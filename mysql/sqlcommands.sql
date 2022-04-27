@@ -40,7 +40,19 @@ VALUES
   ("Life is either a daring adventure or nothing at all.", 'Helen Keller'),
   ("In the end, it's not the years in your life that count. It's the life in your years.", 'Abraham Lincoln'),
   ("Life is never fair, and perhaps it is a good thing for most of us that it is not.", 'Oscar Wilde'),
-  ("If your aunt had balls she would be your uncle but she doesnt so shes not", 'some rando')
+  ("If your aunt had balls she would be your uncle but she doesnt so shes not", 'some rando'),
+  ("I’m sick of following my dreams, man. I’m just going to ask where they’re going and hook up with ’em later.", 'Mitch Hedberg'),
+  ("Gentlemen, you can’t fight in here. This is the war room.", 'President Merkin Muffley (Peter Sellers), Dr. Strangelove'),
+  ("Before you criticize someone, you should walk a mile in their shoes. That way when you criticize them, you are a mile away from them and you have their shoes.", 'Jack Handey'),
+  ("Before you marry a person, you should first make them use a computer with slow Internet to see who they really are.", 'Will Ferrell'),
+  ("I want my children to have all the things I couldn’t afford. Then I want to move in with them.", 'Phyllis Diller'),
+  ("Insomnia sharpens your math skills because you spend all night calculating how much sleep you’ll get if you’re able to ‘fall asleep right now.", 'Anonymous'),
+  ("I walk around like everything’s fine, but deep down, inside my shoe, my sock is sliding off.", 'Anonymous'),
+  ("I haven’t spoken to my wife in years. I didn’t want to interrupt her.", 'Rodney Dangerfield'),
+  ("You know you’ve reached middle age when you’re cautioned to slow down by your doctor, instead of by the police.", 'Joan Rivers'),
+  ("Truth hurts. Maybe not as much as jumping on a bicycle with a seat missing, but it hurts.", 'Lt. Frank Drebin'),
+  ("Common sense is like deodorant. The people who need it most never use it.", 'Anonymous'),
+  ("Here’s all you have to know about men and women: Women are crazy, men are stupid. And the main reason women are crazy is that men are stupid.", 'George Carlin')
 
 
 

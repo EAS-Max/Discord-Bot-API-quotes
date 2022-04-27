@@ -85,20 +85,38 @@ exports.func = req => {
                         reject(err)
                     }
                     try {
-                    resolve({ "status": "success", "status message": "sending quote", "discord_message": result[0].quote + " - " + result[0].person });
+                    resolve({ "status": "success", "status message": "sending quote", "discord_message": result[getRandomInt(0, result.length - 1)].quote + " - " + person });
                     } catch {
                         reject({ "status": "failed", "status_message": "can't resolve query", "discord_message": "failed to find quote from " + person });
                     }
                 });
+                break;
+            case "delete":
+                if (req.get("user") != "max56775684563") {
+                    resolve({ "status": "success", "status_message": "Not Authorised", "discord_message": "Only gods an delete a quote" });
+                    break;
+                }
+                const query4 = `DELETE FROM quotes WHERE quote=? AND person=?`
+                params.shift()
+                params.shift()
+                var quote4 = params.join(" ").split("|")
+                connection.query(query4, [quote4[0], quote4[1]], function (err, result, fields) {
+                    if (err) {
+                        console.log(err)
+                        reject(err)
+                    }
+                    resolve({ "status": "success", "status_message": "quote deleted", "discord_message": "Succesfully deleted quote" });
+                });
+                break;
         }
     })
 };
             
-            // function getRandomInt(min, max) {
-            //     min = Math.ceil(min);
-            //     max = Math.floor(max);
-            //     return Math.floor(Math.random() * (max - min + 1)) + min;
-            // }
+            function getRandomInt(min, max) {
+                min = Math.ceil(min);
+                max = Math.floor(max);
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
             
             
             function rndInt2(min, max) { // min and max included 
