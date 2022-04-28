@@ -6,6 +6,7 @@ const Promise = require('promise');
 const si = require('systeminformation');
 var os = require('os');
 const process = require('process')
+const disk = require('diskusage');
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -112,49 +113,121 @@ exports.func = req => {
                 });
                 break;
                 case "actions":
-                    resolve({ "status": "success", "status_message": "Get all actions", "discord_message": `- 
-USAGE: 
+                    resolve({ "status": "success", "status_message": "Get all actions", "discord_message": `-----------------------------------------
+\n**USAGE:**\ 
 
-!quote <action>
+\n**!quote**\ <action>
 
-ACTIONS:
+\n**ACTIONS:**\
 
-add <quote | name>
+\n**add**\ <quote | name>
 
-random
+\n**random**\
 
-person <name>
+\n**person**\ <name>
 
-ID <id>
+\n**ID**\ <id>
 
-delete <quote | name>
+\n**delete**\ <quote | name>
 
 owner` });
                 break;
-                case "stats": 
-                    // si.cpu()
-                    // .then(data => resolve({ "status": "success", "status_message": "Get all stats", "discord_message": JSON.stringify(data) }))
-                    //resolve({ "status": "success", "status_message": "Get all stats", "discord_message": JSON.stringify(os.cpus()[1], JSON.stringify(os.totalmem()) )})
-                    //resolve({ "status": "success", "status_message": "Get all stats", "discord_message": JSON.stringify(os.totalmem())})
-                    resolve({ "status": "success", "status_message": "Get all stats", "discord_message": JSON.stringify(os.freemem())})
-                    //resolve({ "status": "success", "status_message": "Get all stats", "discord_message": })
-        }
-    })
-};
-            
-            function getRandomInt(min, max) {
-                min = Math.ceil(min);
-                max = Math.floor(max);
-                return Math.floor(Math.random() * (max - min + 1)) + min;
+            case "stats":
+                    var usage = process.cpuUsage();
+                    usage = process.cpuUsage(usage);
+                    const memoryData = process.memoryUsage();  
+                    var ut_sec = os.uptime();
+                    var ut_min = ut_sec/60;
+                    var ut_hour = ut_min/60;
+       
+                    ut_sec = Math.floor(ut_sec);
+                    ut_min = Math.floor(ut_min);
+                    ut_hour = Math.floor(ut_hour);
+                    ut_hour = ut_hour%60;
+                    ut_min = ut_min%60;
+                    ut_sec = ut_sec%60;
+                    let diskFree;
+                    let diskTotal;
+                    
+                    disk.check('/', function(err, info) {
+                        diskFree = info.free;
+                        diskTotal = info.total;
+                    });
+
+
+                    resolve({"status": "success", "status_message": "sending back image", "discord_message": `**Stats:**
+                    \n**Rss:**\ ${formatBytes(memoryData.rss)} Total memory allocated for the process execution
+                    
+                    \n**HeapTotal:**\ ${formatBytes(memoryData.heapTotal)}  Total size of the allocated heap
+
+                    \n**HeapUsed:**\ ${formatBytes(memoryData.heapUsed)} Actual memory used during the execution
+                    
+                    \n**Total memory:**\ ${formatBytes(os.totalmem())}
+
+                    \n**Free memory:**\ ${formatBytes(os.freemem())}
+                
+                    \n**CPU:**\ ${usage.user} Mhz cpu used during the execution
+
+                    \n**CPUS:**\ ${os.cpus().length}
+                    
+                    \n**Disk free**\ ${formatBytes(diskFree)}
+
+                    \n**Disk total**\ ${formatBytes(diskTotal)}
+
+                    \n**Disk used**\ ${formatBytes(diskTotal - diskFree)}
+                    
+                    \n**Up time:**\ ${ut_hour} Hour(s) ${ut_min} minute(s) and ${ut_sec} second(s)
+                    `
+                });
             }
-            
-            
-            function rndInt2(min, max) { // min and max included 
-                return Math.floor(Math.random() * (max - min + 1) + min)
-            }
-        
-            // const query1 = `INSERT INTO quotes 
-            // (quote, person) 
+        })
+    };
+    
+    function formatBytes(bytes, decimals = 2) {
+        if (bytes === 0) return '0 Bytes';
+    
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+    
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
+
+    function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    
+    
+    function rndInt2(min, max) { // min and max included 
+        return Math.floor(Math.random() * (max - min + 1) + min)
+    }
+    
+    // const previousUsage = process.cpuUsage();
+    // const startDate = Date.now();
+    // while (Date.now() - startDate < 500);
+
+    // const usage = process.cpuUsage(previousUsage);
+    // const memory = process.memoryUsage(previousUsage);
+
+    // const usageResult = 100 * (usage.user + usage.system) / ((Date.now() - startDate) * 1000)
+
+    // console.log(usageResult);
+
+    // var heapFree = 0
+    // setTimeout(function () {
+    //     console.log(usage.heapTotal);
+    //     console.log(memory.heapTotal);
+    //     console.log(memory.heapUsed);
+
+    // }, 2000);
+    // heapFree += parseInt(memory.heapTotal) - parseInt(memory.heapUsed)
+    // resolve({ "status": "success", "status_message": "Question", "discord_message": "CPU " + usageResult + "\n Memory used" + process.memoryUsage(previousUsage).heapUsed + "\n Memory free" + heapFree });
+    // const query1 = `INSERT INTO quotes 
+    // (quote, person) 
             // VALUES
             // (?, ?)`;
         
