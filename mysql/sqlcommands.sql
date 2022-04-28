@@ -52,8 +52,14 @@ VALUES
   ("You know you’ve reached middle age when you’re cautioned to slow down by your doctor, instead of by the police.", 'Joan Rivers'),
   ("Truth hurts. Maybe not as much as jumping on a bicycle with a seat missing, but it hurts.", 'Lt. Frank Drebin'),
   ("Common sense is like deodorant. The people who need it most never use it.", 'Anonymous'),
-  ("Here’s all you have to know about men and women: Women are crazy, men are stupid. And the main reason women are crazy is that men are stupid.", 'George Carlin')
-
+  ("Here’s all you have to know about men and women: Women are crazy, men are stupid. And the main reason women are crazy is that men are stupid.", 'George Carlin'),
+  ("Theres not a man here", 'David'),
+  ("I'm Batman", 'Deadpool'),
+  ("I am vengeance.	", 'Batman'),
+  ("Users are stupid.	", 'Rhys Morgan'),
+  ("it's all about the backend.", 'Rhys Morgan'),
+  ("You can use whatever stack you want  as long as its react. ", 'Rhys Morgan'),
+  ("everyones shit", 'Rhys Morgan')
 
 
 

@@ -3,7 +3,9 @@ const mysql = require("mysql");
 const { resolve } = require('path');
 const { reject } = require('promise');
 const Promise = require('promise');
-
+const si = require('systeminformation');
+var os = require('os');
+const process = require('process')
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -76,16 +78,17 @@ exports.func = req => {
                     resolve({ "status": "success", "status_message": "Get owner", "discord_message": "https://tenor.com/view/dark-souls-ya-sobaka-ti-sobaka-yasosy-biby-gif-19664947" });
                 break;
             case "person":
-                const query2 = `SELECT * FROM quotes WHERE person=?`
+                const query2 = `SELECT * FROM quotes WHERE person LIKE ?`;
                 params.shift()
                 params.shift()
                 var person = params.join(" ")
-                connection.query(query2, person, function (err, result, fields) {
+                connection.query(query2, `%${person}%`, function (err, result, fields) {
                     if (err) {
                         reject(err)
                     }
+                    let randomNum = getRandomInt(0, result.length - 1)
                     try {
-                    resolve({ "status": "success", "status message": "sending quote", "discord_message": result[getRandomInt(0, result.length - 1)].quote + " - " + person });
+                    resolve({ "status": "success", "status message": "sending quote", "discord_message": result[randomNum].quote + " - " + result[randomNum].person });
                     } catch {
                         reject({ "status": "failed", "status_message": "can't resolve query", "discord_message": "failed to find quote from " + person });
                     }
@@ -118,13 +121,23 @@ ACTIONS:
 
 add <quote | name>
 
-random, person <name>
+random
+
+person <name>
 
 ID <id>
 
 delete <quote | name>
 
 owner` });
+                break;
+                case "stats": 
+                    // si.cpu()
+                    // .then(data => resolve({ "status": "success", "status_message": "Get all stats", "discord_message": JSON.stringify(data) }))
+                    //resolve({ "status": "success", "status_message": "Get all stats", "discord_message": JSON.stringify(os.cpus()[1], JSON.stringify(os.totalmem()) )})
+                    //resolve({ "status": "success", "status_message": "Get all stats", "discord_message": JSON.stringify(os.totalmem())})
+                    resolve({ "status": "success", "status_message": "Get all stats", "discord_message": JSON.stringify(os.freemem())})
+                    //resolve({ "status": "success", "status_message": "Get all stats", "discord_message": })
         }
     })
 };
