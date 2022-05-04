@@ -4,7 +4,9 @@ const app = express();
 app.use(express.json());
 const fs = require('fs');
 const path = require("path");
+const cors = require('cors');
 
+app.use(cors())
 
 app.use(express.static('public'));
 app.use(express.text());

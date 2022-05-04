@@ -1,12 +1,13 @@
 const fs = require('fs');
 const mysql = require("mysql");
 const { resolve } = require('path');
-const { reject } = require('promise');
+const { reject, all } = require('promise');
 const Promise = require('promise');
 const si = require('systeminformation');
 var os = require('os');
-const process = require('process')
+const process = require('process');
 const disk = require('diskusage');
+
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -29,12 +30,13 @@ exports.func = req => {
 
         switch (params[1]) {
             case "get":
-                connection.query("SELECT * FROM `quotes`", function (err, result, fields) {
+                const query5 = `SELECT * FROM quotes`;
+                connection.query(query5, function (err, result, fields) {
                     if (err) {
                         reject(err);
                     }
                     else {
-                        resolve({ "status": "success", "status message": "sending quote", "discord_message": result[0].quote + " - " + result[0].person });
+                        resolve({result});
                     }
                 });
                 break;
@@ -130,7 +132,7 @@ exports.func = req => {
 
 \n**delete**\ <quote | name>
 
-owner` });
+\n**owner**\ ` });
                 break;
             case "stats":
                     var usage = process.cpuUsage();
