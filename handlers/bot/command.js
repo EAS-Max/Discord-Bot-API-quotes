@@ -1,13 +1,12 @@
 const fs = require('fs');
 const mysql = require("mysql");
-const { resolve } = require('path');
-const { reject, all } = require('promise');
 const Promise = require('promise');
 const si = require('systeminformation');
 var os = require('os');
 const process = require('process');
 const disk = require('diskusage');
 
+const { getByID } = require('../../controllers/quotes.js')
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -24,41 +23,25 @@ connection.connect();
 // const rndInt2 = randomIntFromInterval(1, 24)
 
 
-exports.func = req => {
-    return new Promise((resolve, reject) => {
+module.exports = async (req, res) => {
         let params = req.params.command.split(",");
 
         switch (params[1]) {
-            case "get":
-                const query5 = `SELECT * FROM quotes`;
-                connection.query(query5, function (err, result, fields) {
-                    if (err) {
-                        reject(err);
-                    }
-                    else {
-                        resolve({result});
-                    }
-                });
-                break;
             case "ID":
-                const query = `SELECT * FROM quotes WHERE id=?`;
-                connection.query(query, params[2], function (err, result, fields) {
-                    if (err) {
-                        reject(err)
-                    }
-                    try {
-                    resolve({ "status": "success", "status message": "sending quote", "discord_message": result[0].quote + " - " + result[0].person });
-                    } catch (error) {
-                        reject({ "status": "failed", "status_message": "can't resolve query", "discord_message": "failed to find quote with the ID of " + params[2] });
-                    }
-                });
+                try {
+                    let row = await getByID(params[2])
+                    res.json({ "status": "success", "status message": "sending quote", "discord_message": row.quote + " - " + row.person });
+                } catch (error) {
+                    res.json({ "status": "failed", "status_message": "can't res.json query", "discord_message": "failed to find quote with the ID of " + params[2] });
+                }
+                break;
             case "random":
                 const randomID = rndInt2(1, 30)
                 connection.query(`SELECT * FROM quotes WHERE id= ${randomID}`, function (err, result, fields) {
                     if (err) {
-                        reject(err)
+                        res.json(err)
                     } else {
-                        resolve({ "status": "success", "status message": "sending quote", "discord_message": result[0].quote + " - " + result[0].person });
+                        res.json({ "status": "success", "status message": "sending quote", "discord_message": result[0].quote + " - " + result[0].person });
                     }
                 });
                 break;
@@ -72,13 +55,13 @@ exports.func = req => {
                 connection.query(query3, [quote[0], quote[1]], function (err, result, fields) {
                     if (err) {
                         console.log(err)
-                        reject(err)
+                        res.json(err)
                     }
-                    resolve({ "status": "success", "status_message": "quote added", "discord_message": "Succesfully inserted quote" });
+                    res.json({ "status": "success", "status_message": "quote added", "discord_message": "Succesfully inserted quote" });
                 });
                 break;
             case "owner":
-                    resolve({ "status": "success", "status_message": "Get owner", "discord_message": "https://tenor.com/view/dark-souls-ya-sobaka-ti-sobaka-yasosy-biby-gif-19664947" });
+                    res.json({ "status": "success", "status_message": "Get owner", "discord_message": "https://tenor.com/view/dark-souls-ya-sobaka-ti-sobaka-yasosy-biby-gif-19664947" });
                 break;
             case "person":
                 const query2 = `SELECT * FROM quotes WHERE person LIKE ?`;
@@ -87,19 +70,19 @@ exports.func = req => {
                 var person = params.join(" ")
                 connection.query(query2, `%${person}%`, function (err, result, fields) {
                     if (err) {
-                        reject(err)
+                        res.json(err)
                     }
                     let randomNum = getRandomInt(0, result.length - 1)
                     try {
-                    resolve({ "status": "success", "status message": "sending quote", "discord_message": result[randomNum].quote + " - " + result[randomNum].person });
+                    res.json({ "status": "success", "status message": "sending quote", "discord_message": result[randomNum].quote + " - " + result[randomNum].person });
                     } catch {
-                        reject({ "status": "failed", "status_message": "can't resolve query", "discord_message": "failed to find quote from " + person });
+                        res.json({ "status": "failed", "status_message": "can't res.json query", "discord_message": "failed to find quote from " + person });
                     }
                 });
                 break;
             case "delete":
                 if (req.get("user") != "max56775684563") {
-                    resolve({ "status": "success", "status_message": "Not Authorised", "discord_message": "Only gods an delete a quote" });
+                    res.json({ "status": "success", "status_message": "Not Authorised", "discord_message": "Only gods an delete a quote" });
                     break;
                 }
                 const query4 = `DELETE FROM quotes WHERE quote=? AND person=?`
@@ -109,13 +92,13 @@ exports.func = req => {
                 connection.query(query4, [quote4[0], quote4[1]], function (err, result, fields) {
                     if (err) {
                         console.log(err)
-                        reject(err)
+                        res.json(err)
                     }
-                    resolve({ "status": "success", "status_message": "quote deleted", "discord_message": "Succesfully deleted quote" });
+                    res.json({ "status": "success", "status_message": "quote deleted", "discord_message": "Succesfully deleted quote" });
                 });
                 break;
                 case "actions":
-                    resolve({ "status": "success", "status_message": "Get all actions", "discord_message": `-----------------------------------------
+                    res.json({ "status": "success", "status_message": "Get all actions", "discord_message": `-----------------------------------------
 \n**USAGE:**\ 
 
 \n**!quote**\ <action>
@@ -157,7 +140,7 @@ exports.func = req => {
                     });
 
 
-                    resolve({"status": "success", "status_message": "sending back image", "discord_message": `**Stats:**
+                    res.json({"status": "success", "status_message": "sending back image", "discord_message": `**Stats:**
                     \n**Rss:**\ ${formatBytes(memoryData.rss)} Total memory allocated for the process execution
                     
                     \n**HeapTotal:**\ ${formatBytes(memoryData.heapTotal)}  Total size of the allocated heap
@@ -182,7 +165,7 @@ exports.func = req => {
                     `
                 });
             }
-        })
+
     };
     
     function formatBytes(bytes, decimals = 2) {
@@ -227,7 +210,7 @@ exports.func = req => {
 
     // }, 2000);
     // heapFree += parseInt(memory.heapTotal) - parseInt(memory.heapUsed)
-    // resolve({ "status": "success", "status_message": "Question", "discord_message": "CPU " + usageResult + "\n Memory used" + process.memoryUsage(previousUsage).heapUsed + "\n Memory free" + heapFree });
+    // res.json({ "status": "success", "status_message": "Question", "discord_message": "CPU " + usageResult + "\n Memory used" + process.memoryUsage(previousUsage).heapUsed + "\n Memory free" + heapFree });
     // const query1 = `INSERT INTO quotes 
     // (quote, person) 
             // VALUES
@@ -235,42 +218,42 @@ exports.func = req => {
         
             // connection.query(query1, [params[2], params[3]], function (err, result, fields) {
             //     if (err) {
-            //         reject(err)
+            //         res.json(err)
             //     }
-            //     resolve({ "status": "success", "status_message": "sending quote", "discord_message": "added quote" });
+            //     res.json({ "status": "success", "status_message": "sending quote", "discord_message": "added quote" });
             // });
             // let quoteRepo = {
-                //     get: function (resolve, reject) {
-//         return new Promise((resolve, reject) => {
+                //     get: function (res.json, res.json) {
+//         return new Promise((res.json, res.json) => {
 //             connection.query("SELECT * FROM `quotes`", function (err, result, fields) {
 //                 if (err) {
-//                     reject(err);
+//                     res.json(err);
 //                 }
 //                 else {
-//                     resolve(result);
+//                     res.json(result);
 //                 }
 //             });
 //         })
 //     },
-//     ID: function (id, resolve, reject) {
+//     ID: function (id, res.json, res.json) {
 //         connection.query(`SELECT * FROM quotes WHERE id="${id}"`, function (err, result, fields) {
 //             if (err) {
-//                 reject(err)
+//                 res.json(err)
 //             } else {
-//                 resolve(result);
+//                 res.json(result);
 //             }
 
 //         });
 //     },
-//     getRandom: function (resolve, reject) {
+//     getRandom: function (res.json, res.json) {
 
 //         const randomID = rndInt2(1, 24)
 
 //         connection.query(`SELECT * FROM quotes WHERE id= ${randomID}`, function (err, result, fields) {
 //             if (err) {
-//                 reject(err)
+//                 res.json(err)
 //             } else {
-//                 resolve(result);
+//                 res.json(result);
 //             }
 //         });
 //     },
@@ -284,14 +267,14 @@ exports.func = req => {
 // module.exports = quoteRepo;
 
 
-    //     ID: function (id, resolve, reject) {
+    //     ID: function (id, res.json, res.json) {
     //         fs.readFile(QUOTES_FILE, function (err, data) {
     //             if (err) {
-    //                 reject(err);
+    //                 res.json(err);
     //             }
     //             else {
     //                 let pie = JSON.parse(data).find(p => p.id == id);
-    //                 resolve(pie);
+    //                 res.json(pie);
     //             }
     //         });
     //     }
@@ -302,7 +285,7 @@ exports.func = req => {
 
     // Validate :command parameter has data
     if (req.params.command.length < 1) {
-        reject({ status: "error", status_message: "invalid command structure" })
+        res.json({ status: "error", status_message: "invalid command structure" })
     }
 
     // Convert comma delimited command structure to an array
@@ -314,18 +297,18 @@ exports.func = req => {
         req_identifier = params[0];
         req_action = params[1];
     } catch (err) {
-        reject({ status: "error", status_message: "insufficient_parameters" })
+        res.json({ status: "error", status_message: "insufficient_parameters" })
     }
 
 
     // Validate identifier matches this bot api
     if (req_identifier != spec.identifier) {
-        reject({ status: "error", status_message: "identifier_does_not_match" })
+        res.json({ status: "error", status_message: "identifier_does_not_match" })
     }
 
     // Validate action is valid for this bot api
     if (!spec.actions.includes(req_action)) {
-        reject({ status: "error", status_message: "invalid_action", discord_message: req_action + " isn't a valid action. \n Valid actions are: \n " + spec.actions.join("\n") })
+        res.json({ status: "error", status_message: "invalid_action", discord_message: req_action + " isn't a valid action. \n Valid actions are: \n " + spec.actions.join("\n") })
     }
 
     // Validate action has required parameters
@@ -337,13 +320,13 @@ exports.func = req => {
         }
         if (!params[i + 2]) {
 
-            reject({ status: "error", status_message: "missing_required_parameter", discord_message: "Missing required parameter. \n" + arg_spec })
+            res.json({ status: "error", status_message: "missing_required_parameter", discord_message: "Missing required parameter. \n" + arg_spec })
         } else {
             if (params[i + 2].length < spec.schema[req_action].args[i].min || params[i + 2].length > spec.schema[req_action].args[i].max || !validator.isAlphanumeric(params[i + 2].trim())) {
-                reject({ status: "error", status_message: "invalid_format_required_parameter", discord_message: "Parameter not in required format. \n" + arg_spec })
+                res.json({ status: "error", status_message: "invalid_format_required_parameter", discord_message: "Parameter not in required format. \n" + arg_spec })
             }
         }
     }
 
-    resolve({ status: "success", status_message: "valid_command" })
+    res.json({ status: "success", status_message: "valid_command" })
 */
