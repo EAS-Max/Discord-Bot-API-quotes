@@ -6,7 +6,7 @@ var os = require('os');
 const process = require('process');
 const disk = require('diskusage');
 
-const { getByID, getByPersonLike } = require('../../controllers/quotes.js')
+const { getByID, getByPersonLike, getRandom } = require('../../controllers/quotes.js')
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -36,14 +36,13 @@ module.exports = async (req, res) => {
                 }
                 break;
             case "random":
-                const randomID = rndInt2(1, 30)
-                connection.query(`SELECT * FROM quotes WHERE id= ${randomID}`, function (err, result, fields) {
-                    if (err) {
-                        res.json(err)
-                    } else {
-                        res.json({ "status": "success", "status message": "sending quote", "discord_message": result[0].quote + " - " + result[0].person });
-                    }
-                });
+                try {
+                    let row = await getRandom(params[2])
+                    res.json({ "status": "success", "status message": "sending quote", "discord_message": row.quote + " - " + row.person });
+                } catch (err) {
+                    console.log(err)
+                    res.json(err)
+                }
                 break;
             case "add":
                 const query3 = `INSERT INTO quotes
@@ -177,7 +176,6 @@ module.exports = async (req, res) => {
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
-    
     
     function rndInt2(min, max) { // min and max included 
         return Math.floor(Math.random() * (max - min + 1) + min)
