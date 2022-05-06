@@ -7,7 +7,6 @@ const get = async (req, res) => {
     } catch (err) {
         res.json({ error: err.message })
     }
-
 }
 
 const post = async (req, res) => {

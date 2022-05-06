@@ -6,7 +6,7 @@ var os = require('os');
 const process = require('process');
 const disk = require('diskusage');
 
-const { getByID } = require('../../controllers/quotes.js')
+const { getByID, getByPersonLike } = require('../../controllers/quotes.js')
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -64,21 +64,13 @@ module.exports = async (req, res) => {
                     res.json({ "status": "success", "status_message": "Get owner", "discord_message": "https://tenor.com/view/dark-souls-ya-sobaka-ti-sobaka-yasosy-biby-gif-19664947" });
                 break;
             case "person":
-                const query2 = `SELECT * FROM quotes WHERE person LIKE ?`;
-                params.shift()
-                params.shift()
-                var person = params.join(" ")
-                connection.query(query2, `%${person}%`, function (err, result, fields) {
-                    if (err) {
-                        res.json(err)
-                    }
-                    let randomNum = getRandomInt(0, result.length - 1)
-                    try {
-                    res.json({ "status": "success", "status message": "sending quote", "discord_message": result[randomNum].quote + " - " + result[randomNum].person });
-                    } catch {
-                        res.json({ "status": "failed", "status_message": "can't res.json query", "discord_message": "failed to find quote from " + person });
-                    }
-                });
+                try {
+                    let rows = await getByPersonLike(params[2])
+                    let randomNum = getRandomInt(0, rows.length - 1)
+                    res.json({ "status": "success", "status message": "sending quote", "discord_message": rows[randomNum].quote + " - " + rows[randomNum].person });
+                } catch {
+                    res.json({ "status": "failed", "status_message": "can't res.json query", "discord_message": "failed to find quote from " + params[2] });
+                };
                 break;
             case "delete":
                 if (req.get("user") != "max56775684563") {

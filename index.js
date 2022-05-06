@@ -25,6 +25,7 @@ app.get('/api/command/:command', require('./handlers/bot/command.js'))
 app.get('/api/quotes', require('./handlers/api/quotes.js').get)
 app.post('/api/quotes', require('./handlers/api/quotes.js').post)
 app.get('/api/quotes/:id', require('./handlers/api/quotes_id.js').get)
+app.get('/api/quotes/person/:person', require('./handlers/api/quotes_person.js').get)
 
 
 
