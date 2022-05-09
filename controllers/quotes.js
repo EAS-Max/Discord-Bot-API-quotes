@@ -20,7 +20,6 @@ const getByPersonLike = async (person) => {
 
 
 const getRandom = async (id) => {
-    console.log('test')
     const randomID = rndInt2(1, 50)
     let [row] = await query(`SELECT * FROM quotes WHERE id=${randomID}`)
     return row;
@@ -30,9 +29,17 @@ function rndInt2(min, max) { // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
+const addQuote = async (quote, person) => {
+    console.log('test')
+    let row = await query(`INSERT INTO quotes
+        (quote, person) 
+         VALUES (?, ?)`, [quote, person])
+    return row
+}
 module.exports = {
     getAll,
     getByID,
     getByPersonLike,
-    getRandom
+    getRandom,
+    addQuote
 }

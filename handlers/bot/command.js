@@ -6,7 +6,7 @@ var os = require('os');
 const process = require('process');
 const disk = require('diskusage');
 
-const { getByID, getByPersonLike, getRandom } = require('../../controllers/quotes.js')
+const { getByID, getByPersonLike, getRandom, addQuote } = require('../../controllers/quotes.js')
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -45,19 +45,14 @@ module.exports = async (req, res) => {
                 }
                 break;
             case "add":
-                const query3 = `INSERT INTO quotes
-                (quote, person) 
-                 VALUES (?, ?)`;
-                params.shift()
-                params.shift()
+                try {
                 var quote = params.join(" ").split("|")
-                connection.query(query3, [quote[0], quote[1]], function (err, result, fields) {
-                    if (err) {
-                        console.log(err)
-                        res.json(err)
-                    }
+                await addQuote(params[2])
                     res.json({ "status": "success", "status_message": "quote added", "discord_message": "Succesfully inserted quote" });
-                });
+                } catch (err) {
+                    console.log(err)
+                    res.json(err)
+                }
                 break;
             case "owner":
                     res.json({ "status": "success", "status_message": "Get owner", "discord_message": "https://tenor.com/view/dark-souls-ya-sobaka-ti-sobaka-yasosy-biby-gif-19664947" });
